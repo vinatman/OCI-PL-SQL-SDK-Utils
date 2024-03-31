@@ -54,7 +54,7 @@ Execution
             -- i_sbjct_typ_cd: Subject Type - group, dynamic-group, service, etc | Default - All
             -- i_resrc_typ: Resource Type - object-family, database-family, etc | Default - All
             -- i_separator: Field Separator - ",","|", etc | Default - ","
-        EXEC Policy_Analyzer.getPoliciesbyParameters(i_sbjct_nm => <subject_name>, i_sbjct_typ_cd => '<group>', i_resrc_typ => <resource_type>, i_compartmentID => '<ocid1.tenancy.oc1..xxxx>', i_separator => '<,>');
+        EXEC Policy_Analyzer.getPoliciesbyParameters(i_compartmentID => '<ocid1.tenancy.oc1..xxxxxx>', i_sbjct_nm => NULL, i_sbjct_typ_cd => 'service', i_resrc_typ => NULL, i_separator => ',');
         Spool Off;_
     - Sample Output  
         ------------------------------------------------------------------------------------------------------
