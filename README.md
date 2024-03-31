@@ -15,85 +15,85 @@ This needs to be run on an existing Database instance running on OCI. The authen
 
 Initial steps to be followed to setup permissions for the Database to access the policies associated with the tenancy or the compartment
 
-Dynamic Group 
-    - Create a dynamic group for the respective Databse instance(s)
-        - In the Oracle Cloud Infrastructure console click Identity and Security and click Dynamic Groups
-        - Click Create Dynamic Group and enter a Name, a Description, and a rule or use the Rule Builder to add a rule; Click Create.
-    - Matching rule:
-        - Resources that meet the rule criteria are members of the dynamic group
-        - Example to allow a specific Database instance to access a resource: _resource.id = '<your_Database_instance_OCID>'_
+Dynamic Group <br />
+    - Create a dynamic group for the respective Databse instance(s) <br />
+         &nbsp;&nbsp;&nbsp; - In the Oracle Cloud Infrastructure console click Identity and Security and click Dynamic Groups <br />
+         &nbsp;&nbsp;&nbsp; - Click Create Dynamic Group and enter a Name, a Description, and a rule or use the Rule Builder to add a rule; Click Create. <br />
+    - Matching rule: <br />
+         &nbsp;&nbsp;&nbsp; - Resources that meet the rule criteria are members of the dynamic group <br />
+         &nbsp;&nbsp;&nbsp; - Example to allow a specific Database instance to access a resource: _resource.id = '<your_Database_instance_OCID>'_ <br />
 
-Resource Principal
-    - Enable Resource Principal for the OCI database instance
-        - Example of an execution statement: _EXEC DBMS_CLOUD_ADMIN.ENABLE_RESOURCE_PRINCIPAL(username => 'adb_user');_
+Resource Principal <br />
+    - Enable Resource Principal for the OCI database instance <br />
+         &nbsp;&nbsp;&nbsp; - Example of an execution statement: _EXEC DBMS_CLOUD_ADMIN.ENABLE_RESOURCE_PRINCIPAL(username => 'adb_user');_ <br />
             
-Policies - 
-    - Define permissions for the Database instance (Dynamic Group) to access policies
-    - Policy Statement: _Allow dynamic-group <Dynamic to <manage/use/read> policies in tenancy_
+Policies - <br />
+    - Define permissions for the Database instance (Dynamic Group) to access policies <br />
+    - Policy Statement: _Allow dynamic-group <Dynamic to <manage/use/read> policies in tenancy_ <br />
 
-Packages
-    - Run @Policy_Analyzer.sql - Compiles Policy_Analyzer package specification and body
+Packages <br />
+    - Run @Policy_Analyzer.sql - Compiles Policy_Analyzer package specification and body <br />
 
-Execution
-    - Extract policies in the scope of the tenancy or compartment 
-    - Policies could further be filtered by the subject, subject type or resource type
-    - Output will be list of policies with the policy components separated by the defined or the default separator
-    - Pass the appropriate parameters 
-            - Compartment ID: Compartment or Tenancy OCID
-            - Subject Name: Default - All
-            - Subject Type: group, dynamic-group, service, etc | Default - All
-            - Resource Type: object-family, database-family, etc | Default - All
-            - Field Separator: ",","|", etc | Default - ","
-    - Sample Execution
-        _SET SERVEROUT ON;
-        Spool <Output Path>.csv;
-        -- Required Parameter
-            -- i_compartmentID: compartment or tenancy OCID
-        -- Optional Parameters for filters
-            -- i_sbjct_nm: Subject Name | Default - All
-            -- i_sbjct_typ_cd: Subject Type - group, dynamic-group, service, etc | Default - All
-            -- i_resrc_typ: Resource Type - object-family, database-family, etc | Default - All
-            -- i_separator: Field Separator - ",","|", etc | Default - ","
-        EXEC Policy_Analyzer.getPoliciesbyParameters(i_compartmentID => '<ocid1.tenancy.oc1..xxxxxx>', i_sbjct_nm => NULL, i_sbjct_typ_cd => 'service', i_resrc_typ => NULL, i_separator => ',');
-        Spool Off;_
-    - Sample Output  
-        ------------------------------------------------------------------------------------------------------
-        ****************************************COMPARTMENTS HIERARCHY****************************************
-        ------------------------------------------------------------------------------------------------------
-        Compartment OCID: ocid1.tenancy.oc1..aaaaaaaa6llsor5h4mbc6dohmct5gj437bvq6nmefdeobpiqqgk4vfmxdmlq
-        Compartment OCID: ocid1.compartment.oc1..aaaaaaaapx234d667dpdbqglkfmak6fbcoayvhd6tmcb6bcnn56w735ctxzq
-        Compartment OCID: ocid1.compartment.oc1..aaaaaaaavhvolmjws4dpzczvhiznrctowbuuf3twprwasn7d3xxei4ugvnpq
-        Compartment OCID: ocid1.compartment.oc1..aaaaaaaazacvk3zjbjtl36hhyoxh4dvmfz2zsgtk4j4pzpod65rl4yl5ci7q
-        ------------------------------------------------------------------------------------------------------
-        Policy_Number,Subject_Type,Subject,Verb,Resource_Type,Scope,Condition
-        ------------------------------------------------------------------------------------------------------
-        3,service,cloudguard,manage,cloudevents-rules,tenancy,target.rule.type='managed'
-        4,service,cloudguard,read,vaults,tenancy,
-        5,service,cloudguard,read,keys,tenancy,
-        6,service,cloudguard,read,compartments,tenancy,
-        7,service,cloudguard,read,tenancies,tenancy,
-        8,service,cloudguard,read,audit-events,tenancy,
-        9,service,cloudguard,read,compute-management-family,tenancy,
-        10,service,cloudguard,read,instance-family,tenancy,
-        11,service,cloudguard,read,virtual-network-family,tenancy,
-        12,service,cloudguard,read,volume-family,tenancy,
-        13,service,cloudguard,read,database-family,tenancy,
-        14,service,cloudguard,read,object-family,tenancy,
-        15,service,cloudguard,read,load-balancers,tenancy,
-        16,service,cloudguard,read,users,tenancy,
-        17,service,cloudguard,read,groups,tenancy,
-        18,service,cloudguard,read,policies,tenancy,
-        19,service,cloudguard,read,dynamic-groups,tenancy,
-        20,service,cloudguard,read,authentication-policies,tenancy,
-        21,service,cloudguard,use,network-security-groups,tenancy,
-        22,service,cloudguard,read,data-safe-family,tenancy,
-        23,service,cloudguard,read,autonomous-database-family,tenancy,
-        24,service,cloudguard,read,log-groups,tenancy,
-        27,service,objectstorage-us-ashburn-1,manage,object-family,tenancy,
-        28,service,dpd,read,secret-family,tenancy,any {target.secret.id = 'ocid1.vaultsecret.oc1.iad.amaaaaaam44ozeiaj6phbbiazugq7p363d7e7srbauiemw2hryfmbtckxmnq'}
-        39,service,datascience,use,virtual-network-family,compartment DataScienceLab,
-        42,service,operations-insights,read,secret-family,tenancy,any { target.vault.id = 'ocid1.vault.oc1.iad.ejsw6q7caacle.abuwcljrio7eakbc7nf6jpfwlhbwsugffvrawpfs6nqjroliyytlktzdihtq' }
-        43,GROUP,Administrators,manage,all-resources,TENANCY,
+Execution <br />
+    - Extract policies in the scope of the tenancy or compartment <br />
+    - Policies could further be filtered by the subject, subject type or resource type <br />
+    - Output will be list of policies with the policy components separated by the defined or the default separator <br />
+    - Pass the appropriate parameters <br />
+           &nbsp;&nbsp;&nbsp; - Compartment ID: Compartment or Tenancy OCID <br />
+           &nbsp;&nbsp;&nbsp; - Subject Name: Default - All <br />
+           &nbsp;&nbsp;&nbsp; - Subject Type: group, dynamic-group, service, etc | Default - All <br />
+           &nbsp;&nbsp;&nbsp; - Resource Type: object-family, database-family, etc | Default - All <br />
+           &nbsp;&nbsp;&nbsp; - Field Separator: ",","|", etc | Default - "," <br />
+    - Sample Execution <br />
+        &nbsp;&nbsp;&nbsp; _SET SERVEROUT ON; <br />
+        &nbsp;&nbsp;&nbsp; Spool (Output Path).csv; <br />
+        &nbsp;&nbsp;&nbsp; -- Required Parameter <br />
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_compartmentID: compartment or tenancy OCID <br />
+        &nbsp;&nbsp;&nbsp; -- Optional Parameters for filters <br />
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_sbjct_nm: Subject Name | Default - All <br />
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_sbjct_typ_cd: Subject Type - group, dynamic-group, service, etc | Default - All <br />
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_resrc_typ: Resource Type - object-family, database-family, etc | Default - All <br />
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_separator: Field Separator - ",","|", etc | Default - "," <br />
+        &nbsp;&nbsp;&nbsp; EXEC Policy_Analyzer.getPoliciesbyParameters(i_compartmentID => '<ocid1.tenancy.oc1..xxxxxx>', i_sbjct_nm => NULL, i_sbjct_typ_cd => 'service', i_resrc_typ => NULL, i_separator => ','); <br />
+        &nbsp;&nbsp;&nbsp; Spool Off;_ <br />
+    - Sample Output <br />
+        ------------------------------------------------------------------------------------------------------ <br />
+        ****************************************COMPARTMENTS HIERARCHY**************************************** <br />
+        ------------------------------------------------------------------------------------------------------ <br />
+        Compartment OCID: ocid1.tenancy.oc1..aaaaaaaa6llsor5h4mbc6dohmct5gj437bvq6nmefdeobpiqqgk4vfmxdmlq <br />
+        Compartment OCID: ocid1.compartment.oc1..aaaaaaaapx234d667dpdbqglkfmak6fbcoayvhd6tmcb6bcnn56w735ctxzq <br />
+        Compartment OCID: ocid1.compartment.oc1..aaaaaaaavhvolmjws4dpzczvhiznrctowbuuf3twprwasn7d3xxei4ugvnpq <br />
+        Compartment OCID: ocid1.compartment.oc1..aaaaaaaazacvk3zjbjtl36hhyoxh4dvmfz2zsgtk4j4pzpod65rl4yl5ci7q <br />
+        ------------------------------------------------------------------------------------------------------ <br />
+        Policy_Number,Subject_Type,Subject,Verb,Resource_Type,Scope,Condition <br />
+        ------------------------------------------------------------------------------------------------------ <br />
+        3,service,cloudguard,manage,cloudevents-rules,tenancy,target.rule.type='managed' <br />
+        4,service,cloudguard,read,vaults,tenancy, <br />
+        5,service,cloudguard,read,keys,tenancy, <br />
+        6,service,cloudguard,read,compartments,tenancy, <br />
+        7,service,cloudguard,read,tenancies,tenancy, <br />
+        8,service,cloudguard,read,audit-events,tenancy, <br />
+        9,service,cloudguard,read,compute-management-family,tenancy, <br />
+        10,service,cloudguard,read,instance-family,tenancy, <br />
+        11,service,cloudguard,read,virtual-network-family,tenancy, <br />
+        12,service,cloudguard,read,volume-family,tenancy, <br />
+        13,service,cloudguard,read,database-family,tenancy, <br />
+        14,service,cloudguard,read,object-family,tenancy, <br />
+        15,service,cloudguard,read,load-balancers,tenancy, <br />
+        16,service,cloudguard,read,users,tenancy, <br />
+        17,service,cloudguard,read,groups,tenancy, <br />
+        18,service,cloudguard,read,policies,tenancy, <br />
+        19,service,cloudguard,read,dynamic-groups,tenancy, <br />
+        20,service,cloudguard,read,authentication-policies,tenancy, <br />
+        21,service,cloudguard,use,network-security-groups,tenancy, <br />
+        22,service,cloudguard,read,data-safe-family,tenancy, <br />
+        23,service,cloudguard,read,autonomous-database-family,tenancy, <br />
+        24,service,cloudguard,read,log-groups,tenancy, <br />
+        27,service,objectstorage-us-ashburn-1,manage,object-family,tenancy, <br />
+        28,service,dpd,read,secret-family,tenancy,any {target.secret.id = 'ocid1.vaultsecret.oc1.iad.amaaaaaam44ozeiaj6phbbiazugq7p363d7e7srbauiemw2hryfmbtckxmnq'} <br />
+        39,service,datascience,use,virtual-network-family,compartment DataScienceLab, <br />
+        42,service,operations-insights,read,secret-family,tenancy,any { target.vault.id = 'ocid1.vault.oc1.iad.ejsw6q7caacle.abuwcljrio7eakbc7nf6jpfwlhbwsugffvrawpfs6nqjroliyytlktzdihtq' } <br />
+        43,GROUP,Administrators,manage,all-resources,TENANCY, <br />
 
 ## Help
 
