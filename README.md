@@ -18,26 +18,21 @@ Initial steps to be followed to setup permissions for the Database to access the
 Dynamic Group 
     - Create a dynamic group for the respective Databse instance(s)
         - In the Oracle Cloud Infrastructure console click Identity and Security and click Dynamic Groups
-        - Click Create Dynamic Group and enter a Name, a Description, and a rule or use the Rule Builder to add a rule.
-        - Click Create.
+        - Click Create Dynamic Group and enter a Name, a Description, and a rule or use the Rule Builder to add a rule; Click Create.
     - Matching rule:
         - Resources that meet the rule criteria are members of the dynamic group
-        - Example to allow a specific Database instance to access a resource:
-            - _resource.id = '<your_Database_instance_OCID>'_
+        - Example to allow a specific Database instance to access a resource: _resource.id = '<your_Database_instance_OCID>'_
 
 Resource Principal
     - Enable Resource Principal for the OCI database instance
-        - Example of an execution statement:
-            - _EXEC DBMS_CLOUD_ADMIN.ENABLE_RESOURCE_PRINCIPAL(username => 'adb_user');_
+        - Example of an execution statement: _EXEC DBMS_CLOUD_ADMIN.ENABLE_RESOURCE_PRINCIPAL(username => 'adb_user');_
             
 Policies - 
     - Define permissions for the Database instance (Dynamic Group) to access policies
-    - Policy Statement: 
-        _Allow dynamic-group <Dynamic to <manage/use/read> policies in tenancy_
+    - Policy Statement: _Allow dynamic-group <Dynamic to <manage/use/read> policies in tenancy_
 
 Packages
-    - Run @Policy_Analyzer.sql 
-        - Compiles Policy_Analyzer package specification and body
+    - Run @Policy_Analyzer.sql - Compiles Policy_Analyzer package specification and body
 
 Execution
     - Extract policies in the scope of the tenancy or compartment 
