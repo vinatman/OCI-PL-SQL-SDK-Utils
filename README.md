@@ -54,16 +54,16 @@ Execution <br />
             &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_sbjct_typ_cd: Subject Type - group, dynamic-group, service, etc | Default - All <br />
             &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_resrc_typ: Resource Type - object-family, database-family, etc | Default - All <br />
             &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; -- i_separator: Field Separator - ",","|", etc | Default - "," <br />
-        &nbsp;&nbsp;&nbsp; EXEC Policy_Analyzer.getPoliciesbyParameters(i_compartmentID => '<ocid1.tenancy.oc1..xxxxxx>', i_sbjct_nm => NULL, i_sbjct_typ_cd => 'service', i_resrc_typ => NULL, i_separator => ','); <br />
+        &nbsp;&nbsp;&nbsp; EXEC Policy_Analyzer.getPoliciesbyParameters(i_compartmentID => '<ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>', i_sbjct_nm => NULL, i_sbjct_typ_cd => 'service', i_resrc_typ => NULL, i_separator => ','); <br />
         &nbsp;&nbsp;&nbsp; Spool Off;_ <br />
     - Sample Output <br />
         ------------------------------------------------------------------------------------------------------ <br />
         ****************************************COMPARTMENTS HIERARCHY**************************************** <br />
         ------------------------------------------------------------------------------------------------------ <br />
-        Compartment OCID: ocid1.tenancy.oc1..aaaaaaaa6llsor5h4mbc6dohmct5gj437bvq6nmefdeobpiqqgk4vfmxdmlq <br />
-        Compartment OCID: ocid1.compartment.oc1..aaaaaaaapx234d667dpdbqglkfmak6fbcoayvhd6tmcb6bcnn56w735ctxzq <br />
-        Compartment OCID: ocid1.compartment.oc1..aaaaaaaavhvolmjws4dpzczvhiznrctowbuuf3twprwasn7d3xxei4ugvnpq <br />
-        Compartment OCID: ocid1.compartment.oc1..aaaaaaaazacvk3zjbjtl36hhyoxh4dvmfz2zsgtk4j4pzpod65rl4yl5ci7q <br />
+        Compartment OCID: ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx <br />
+        Compartment OCID: ocid1.compartment.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx <br />
+        Compartment OCID: ocid1.compartment.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx <br />
+        Compartment OCID: ocid1.compartment.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx <br />
         ------------------------------------------------------------------------------------------------------ <br />
         Policy_Number,Subject_Type,Subject,Verb,Resource_Type,Scope,Condition <br />
         ------------------------------------------------------------------------------------------------------ <br />
